@@ -1,0 +1,6 @@
+bot_config:
+  app_id: 10000000
+  app_secret: "YOUR_APP_SECRET"
+  app_token: "YOUR_APP_TOKEN"
+  timeout_second: 3
+  test_mode: true

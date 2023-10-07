@@ -1,0 +1,8 @@
+chat:
+  base_url: "https://api.openai.com"
+  api_version: "v1"
+  app_token: "YOUR_API_KEY"
+  prompt: "你是OpenAI训练的ChatGPT模型，你现在的身份是一个人类的助理，你可能要处理各种专业领域的知识并对回答中可能的专业知识给出详细的解释，在所有的对话中，请使用中文作为对话语言"
+  temperature: 0.5
+  presence_penalty: 0.1
+  frequency_penalty: 0.1
