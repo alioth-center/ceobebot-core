@@ -8,8 +8,7 @@ import (
 
 var (
 	logConfig Config
-	output    *os.File
-	logger    = logrus.New()
+	logger    *Logger
 )
 
 func init() {
@@ -18,18 +17,8 @@ func init() {
 		panic(loadConfigErr)
 	}
 
-	// 初始化日志输出文件
-	outputFile, initOutputFileErr := os.OpenFile(logConfig.FilePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o755)
-	if initOutputFileErr != nil {
-		panic(initOutputFileErr)
-	} else {
-		output = outputFile
-	}
-
 	// 初始化日志记录器
-	logger.SetLevel(getLevel(logConfig.Level))
-	logger.SetFormatter(getFormatter(logConfig.Formatter))
-	logger.SetOutput(output)
+	logger = NewLogger(logConfig)
 }
 
 // getLevel 获取日志等级
@@ -56,10 +45,68 @@ func getLevel(level string) logrus.Level {
 func getFormatter(formatter string) logrus.Formatter {
 	switch formatter {
 	case "json":
-		return &logrus.JSONFormatter{}
+		return &jsonFormatter{original: &logrus.JSONFormatter{}}
 	case "text":
 		return &logrus.TextFormatter{}
 	default:
-		return &logrus.TextFormatter{}
+		return &jsonFormatter{original: &logrus.JSONFormatter{}}
 	}
+}
+
+type Logger struct {
+	logger *logrus.Logger
+}
+
+// Debug 记录一个调试级别的日志
+func (l *Logger) Debug(message Fields) {
+	l.logger.WithFields(logrus.Fields(message)).Debug()
+}
+
+// Info 记录一个信息级别的日志
+func (l *Logger) Info(message Fields) {
+	l.logger.WithFields(logrus.Fields(message)).Info()
+}
+
+// Warn 记录一个警告级别的日志
+func (l *Logger) Warn(message Fields) {
+	l.logger.WithFields(logrus.Fields(message)).Warn()
+}
+
+// Error 记录一个错误级别的日志
+func (l *Logger) Error(message Fields) {
+	l.logger.WithFields(logrus.Fields(message)).Error()
+}
+
+// Fatal 记录一个致命错误级别的日志
+func (l *Logger) Fatal(message Fields) {
+	l.logger.WithFields(logrus.Fields(message)).Fatal()
+}
+
+// Panic 记录一个崩溃级别的日志
+func (l *Logger) Panic(message Fields) {
+	l.logger.WithFields(logrus.Fields(message)).Panic()
+}
+
+// Log 记录一个自定义级别的日志
+func (l *Logger) Log(level string, message Fields) {
+	l.logger.WithFields(logrus.Fields(message)).Log(getLevel(level))
+}
+
+func NewLogger(conf Config) *Logger {
+	// 初始化日志输出文件
+	var output *os.File
+	outputFile, initOutputFileErr := os.OpenFile(conf.FilePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o755)
+	if initOutputFileErr != nil {
+		panic(initOutputFileErr)
+	} else {
+		output = outputFile
+	}
+
+	// 初始化日志记录器
+	l := &Logger{logger: logrus.New()}
+	l.logger.SetLevel(getLevel(conf.Level))
+	l.logger.SetFormatter(getFormatter(conf.Formatter))
+	l.logger.SetOutput(output)
+
+	return l
 }
