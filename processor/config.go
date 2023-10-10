@@ -13,9 +13,10 @@ func init() {
 }
 
 type SystemConfig struct {
-	AppID         uint64 `yaml:"app_id"`
-	AppSecret     string `yaml:"app_secret"`
-	AppToken      string `yaml:"app_token"`
-	TimeoutSecond int    `yaml:"timeout_second"`
-	TestMode      bool   `yaml:"test_mode"`
+	AppID          uint64 `yaml:"app_id"`
+	AppSecret      string `yaml:"app_secret"`
+	AppToken       string `yaml:"app_token"`
+	TimeoutSecond  int    `yaml:"timeout_second"`
+	TestMode       bool   `yaml:"test_mode"`
+	UndefinedReply string `yaml:"undefined_reply"`
 }

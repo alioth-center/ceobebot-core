@@ -14,10 +14,6 @@ const (
 )
 
 var (
-	AllSupportedModels = []GptModel{
-		Gpt3Dot5Turbo, Gpt3Dot5Turbo16K, Gpt3Dot5Turbo0613, Gpt3Dot5Turbo16K0613, Gpt4, Gpt40314, Gpt40613, Gpt4Poe,
-	}
-
 	SupportedGptModels = map[string]GptModel{
 		"gpt-3.5-turbo":          Gpt3Dot5Turbo,
 		"gpt-3.5-turbo-16k":      Gpt3Dot5Turbo16K,

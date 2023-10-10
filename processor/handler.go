@@ -7,9 +7,23 @@ import (
 )
 
 func init() {
-	defaultMatcher.SetDefaultHandlerFunctions([]MustHandleFunction{}, []OptionalHandleFunction{
-		NotFoundCommandAfterIncorrectCommandCheckReplyHandler(),
-	})
+	// 设置默认未找到命令回复
+	var notFoundHandler OptionalHandleFunction
+	switch strings.ToLower(systemConfig.UndefinedReply) {
+	case "not_matched_if_no_help":
+		notFoundHandler = NotFoundCommandAfterIncorrectCommandCheckReplyHandler()
+	case "ignore":
+		notFoundHandler = nil
+	case "not_matched":
+		notFoundHandler = NotMatchedCommandReplyHandler()
+	case "help":
+		notFoundHandler = IncorrectCommandReplyHandler()
+	default:
+		notFoundHandler = nil
+	}
+	defaultMatcher.SetDefaultHandlerFunctions([]MustHandleFunction{}, []OptionalHandleFunction{notFoundHandler})
+
+	// 注册默认指令
 	defaultMatcher.RegisterCommand("/list", "List Commands", "列出某服务的所有指令",
 		"/list /list", func(s string) bool { return strings.HasPrefix(s, "/") }, []MustHandleFunction{},
 		[]OptionalHandleFunction{ListCommandReplyHandler()})

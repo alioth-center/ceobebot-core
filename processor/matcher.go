@@ -63,12 +63,20 @@ func (m *defaultHandlerMatcher) SetDefaultHandlerFunctions(mustHandlers []MustHa
 	if mustHandlers == nil {
 		mustHandlers = []MustHandleFunction{}
 	}
-	m.defaultMustHandlers = mustHandlers
+	for _, handler := range mustHandlers {
+		if handler != nil {
+			m.defaultMustHandlers = append(m.defaultMustHandlers, handler)
+		}
+	}
 
 	if optionalHandlers == nil {
 		optionalHandlers = []OptionalHandleFunction{}
 	}
-	m.defaultOptionalHandlers = optionalHandlers
+	for _, handler := range optionalHandlers {
+		if handler != nil {
+			m.defaultOptionalHandlers = append(m.defaultOptionalHandlers, handler)
+		}
+	}
 }
 
 func (m *defaultHandlerMatcher) RegisterCommand(commandKey, commandName, commandDescription, commandExample string, contentFilter func(string) bool, mustHandlers []MustHandleFunction, optionalHandlers []OptionalHandleFunction) {
