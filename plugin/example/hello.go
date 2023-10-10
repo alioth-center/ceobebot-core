@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"studio.sunist.work/sunist-c/ceobebot-qqchanel/plugin"
 	"studio.sunist.work/sunist-c/ceobebot-qqchanel/processor"
+	"studio.sunist.work/sunist-c/ceobebot-qqchanel/processor/message"
 )
 
 func init() {
@@ -35,13 +36,15 @@ func (h HelloCommand) Description() string {
 }
 
 func (h HelloCommand) Example() string {
-	return "/hello : Hello, ${你的名字}!"
+	return "/hello"
 }
 
 func (h HelloCommand) Triggered(_ string) (triggered bool) {
 	return true
 }
 
-func (h HelloCommand) Handle(payload processor.Payload) (replyMessage string) {
-	return fmt.Sprintf("Hello, %s!", payload.Message.Author.Username)
+func (h HelloCommand) Handle(payload processor.Payload) (replyMessage message.Message) {
+	return message.NewTextMessage().
+		At(payload.Message.Author.ID).
+		Text(fmt.Sprintf("Hello, %s!", payload.Message.Author.Username))
 }

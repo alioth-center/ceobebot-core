@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"studio.sunist.work/sunist-c/ceobebot-qqchanel/plugin"
 	"studio.sunist.work/sunist-c/ceobebot-qqchanel/processor"
+	"studio.sunist.work/sunist-c/ceobebot-qqchanel/processor/message"
 	"time"
 )
 
@@ -27,9 +28,14 @@ func (g GptCommand) Triggered(content string) (triggered bool) {
 	return content != ""
 }
 
-func (g GptCommand) Handle(payload processor.Payload) (replyMessage string) {
+func (g GptCommand) Handle(payload processor.Payload) (replyMessage message.Message) {
 	start := time.Now()
 	reply, additional := client.ReplyConversation(payload.Content)
 	end := time.Since(start)
-	return fmt.Sprintf("%s\n----\n%s\n耗时:%s", reply, additional, end.String())
+	return message.NewTextMessage().
+		At(payload.Message.Author.ID).NewLine().
+		Text(reply).NewLine().
+		Text(additional).NewLine().
+		Text(fmt.Sprintf("耗时: %s", end.String())).
+		Reference(payload.Message.ID)
 }

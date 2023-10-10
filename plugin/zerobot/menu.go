@@ -6,6 +6,7 @@ import (
 	"studio.sunist.work/sunist-c/ceobebot-qqchanel/infrastructure/config"
 	"studio.sunist.work/sunist-c/ceobebot-qqchanel/plugin"
 	"studio.sunist.work/sunist-c/ceobebot-qqchanel/processor"
+	"studio.sunist.work/sunist-c/ceobebot-qqchanel/processor/message"
 	"time"
 )
 
@@ -61,7 +62,8 @@ func (m MenuCommand) Triggered(content string) (triggered bool) {
 	return false
 }
 
-func (m MenuCommand) Handle(payload processor.Payload) (replyMessage string) {
+func (m MenuCommand) Handle(payload processor.Payload) (reply message.Message) {
+	replyMessage := ""
 	getMenuTemplate := "%s今天%s的食谱为：%s"
 	switch payload.Content {
 	case "吃什么":
@@ -85,5 +87,5 @@ func (m MenuCommand) Handle(payload processor.Payload) (replyMessage string) {
 		replyMessage = "饭店这个时候都关了，吃西北风吧"
 	}
 
-	return replyMessage
+	return message.NewTextMessage().At(payload.Message.Author.ID).Text(replyMessage)
 }

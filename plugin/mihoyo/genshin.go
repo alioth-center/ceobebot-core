@@ -4,6 +4,7 @@ import (
 	"strings"
 	"studio.sunist.work/sunist-c/ceobebot-qqchanel/plugin"
 	"studio.sunist.work/sunist-c/ceobebot-qqchanel/processor"
+	"studio.sunist.work/sunist-c/ceobebot-qqchanel/processor/message"
 )
 
 type GenshinCommand struct {
@@ -19,13 +20,16 @@ func (g GenshinCommand) Description() string {
 }
 
 func (g GenshinCommand) Example() string {
-	return "/mihoyo gs [命令]"
+	return "/mihoyo gs [命令]\n/mihoyo ys [命令]"
 }
 
 func (g GenshinCommand) Triggered(content string) (triggered bool) {
-	return strings.HasPrefix(content, "gs")
+	return strings.HasPrefix(content, "gs") || strings.HasPrefix(content, "ys")
 }
 
-func (g GenshinCommand) Handle(payload processor.Payload) (replyMessage string) {
-	return "适配中，敬请期待"
+func (g GenshinCommand) Handle(payload processor.Payload) (replyMessage message.Message) {
+	return message.NewTextMessage().
+		At(payload.Message.Author.ID).
+		Emojis("[太阳]").
+		Text("原神相关功能仍在开发适配中，敬请期待！")
 }
