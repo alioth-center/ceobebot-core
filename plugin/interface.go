@@ -1,6 +1,9 @@
 package plugin
 
-import "studio.sunist.work/sunist-c/ceobebot-qqchanel/processor"
+import (
+	"studio.sunist.work/sunist-c/ceobebot-qqchanel/processor"
+	"studio.sunist.work/sunist-c/ceobebot-qqchanel/processor/message"
+)
 
 type MessageCommandType string
 
@@ -20,7 +23,7 @@ type Command interface {
 	Example() string
 	Triggered(content string) (triggered bool)
 	Type() MessageCommandType
-	Handle(payload processor.Payload) (replyMessage string)
+	Handle(payload processor.Payload) (replyMessage message.Message)
 }
 
 type TextReplyCommand Command

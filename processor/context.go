@@ -16,7 +16,7 @@ type Payload struct {
 type Context interface {
 	GetContext() context.Context
 	SetContext(ctx context.Context)
-	GetApi() openapi.OpenAPI
+	GetApi() Client
 	GetPayload() Payload
 	Next()
 	Abort()
@@ -25,7 +25,7 @@ type Context interface {
 
 type defaultContext struct {
 	ctx              context.Context
-	api              openapi.OpenAPI
+	api              Client
 	mustHandlers     []MustHandleFunction
 	optionalHandlers []OptionalHandleFunction
 	idx              int
@@ -41,7 +41,7 @@ func (c *defaultContext) SetContext(ctx context.Context) {
 	c.ctx = ctx
 }
 
-func (c *defaultContext) GetApi() openapi.OpenAPI {
+func (c *defaultContext) GetApi() Client {
 	return c.api
 }
 
@@ -85,7 +85,7 @@ func NewContext(ctx context.Context, api openapi.OpenAPI, payload Payload, funct
 
 	return &defaultContext{
 		ctx:              ctx,
-		api:              api,
+		api:              NewClient(api),
 		mustHandlers:     functions,
 		optionalHandlers: handlers,
 		idx:              -1,

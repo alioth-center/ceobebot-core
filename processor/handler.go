@@ -1,9 +1,9 @@
 package processor
 
 import (
-	"github.com/tencent-connect/botgo/dto"
-	"github.com/tencent-connect/botgo/dto/message"
+	txMessage "github.com/tencent-connect/botgo/dto/message"
 	"strings"
+	"studio.sunist.work/sunist-c/ceobebot-qqchanel/processor/message"
 )
 
 func init() {
@@ -25,13 +25,10 @@ func NotMatchedCommandReplyHandler() OptionalHandleFunction {
 	return func(ctx Context) {
 		ctx.Next()
 		payload := ctx.GetPayload()
-		_, _ = ctx.GetApi().PostMessage(ctx.GetContext(), payload.Message.ChannelID, &dto.MessageToCreate{
-			Content: FormatNotMatchedCommandMessage(payload.Command, payload.Content),
-			MessageReference: &dto.MessageReference{
-				MessageID:             payload.Message.ID,
-				IgnoreGetMessageError: true,
-			},
-		})
+		msg := message.NewTextMessage().
+			Reference(payload.Message.ID).
+			Text(FormatNotMatchedCommandMessage(payload.Command, payload.Content))
+		ctx.GetApi().ReplyMessage(ctx, msg)
 	}
 }
 
@@ -40,13 +37,10 @@ func IncorrectCommandReplyHandler() OptionalHandleFunction {
 		ctx.Next()
 		payload := ctx.GetPayload()
 		commandInfos := defaultMatcher.GetHelpInfo(payload.Command, payload.Content)
-		_, _ = ctx.GetApi().PostMessage(ctx.GetContext(), payload.Message.ChannelID, &dto.MessageToCreate{
-			Content: FormatIncorrectCommandArgumentMessage(commandInfos),
-			MessageReference: &dto.MessageReference{
-				MessageID:             payload.Message.ID,
-				IgnoreGetMessageError: true,
-			},
-		})
+		msg := message.NewTextMessage().
+			Reference(payload.Message.ID).
+			Text(FormatIncorrectCommandArgumentMessage(commandInfos))
+		ctx.GetApi().ReplyMessage(ctx, msg)
 	}
 }
 
@@ -57,27 +51,20 @@ func ListCommandReplyHandler() OptionalHandleFunction {
 		for _, info := range defaultMatcher.ListCommands(payload.Content) {
 			infos = append(infos, info)
 		}
-
-		_, _ = ctx.GetApi().PostMessage(ctx.GetContext(), payload.Message.ChannelID, &dto.MessageToCreate{
-			Content: FormatListHelpInfoMessage(payload.Content, infos),
-			MessageReference: &dto.MessageReference{
-				MessageID:             payload.Message.ID,
-				IgnoreGetMessageError: true,
-			},
-		})
+		msg := message.NewTextMessage().
+			Reference(payload.Message.ID).
+			Text(FormatListHelpInfoMessage(payload.Content, infos))
+		ctx.GetApi().ReplyMessage(ctx, msg)
 	}
 }
 
 func ListAllCommandReplyHandler() OptionalHandleFunction {
 	return func(ctx Context) {
 		payload := ctx.GetPayload()
-		_, _ = ctx.GetApi().PostMessage(ctx.GetContext(), payload.Message.ChannelID, &dto.MessageToCreate{
-			Content: FormatListAllServiceInfoMessage(),
-			MessageReference: &dto.MessageReference{
-				MessageID:             payload.Message.ID,
-				IgnoreGetMessageError: true,
-			},
-		})
+		msg := message.NewTextMessage().
+			Reference(payload.Message.ID).
+			Text(FormatListAllServiceInfoMessage())
+		ctx.GetApi().ReplyMessage(ctx, msg)
 	}
 }
 
@@ -90,39 +77,28 @@ func NotFoundCommandAfterIncorrectCommandCheckReplyHandler() OptionalHandleFunct
 			commandInfos := defaultMatcher.GetHelpInfo(payload.Command, payload.Content)
 			// 如果被中断且找到了命令，说明是命令参数错误，需要提示
 			if commandInfos != nil && len(commandInfos) != 0 {
-				_, _ = ctx.GetApi().PostMessage(ctx.GetContext(), payload.Message.ChannelID, &dto.MessageToCreate{
-					Content: FormatIncorrectCommandArgumentMessage(commandInfos),
-					MessageReference: &dto.MessageReference{
-						MessageID:             payload.Message.ID,
-						IgnoreGetMessageError: true,
-					},
-				})
+				msg := message.NewTextMessage().
+					Reference(payload.Message.ID).
+					Text(FormatIncorrectCommandArgumentMessage(commandInfos))
+				ctx.GetApi().ReplyMessage(ctx, msg)
 				return
 			}
 		}
-
-		_, _ = ctx.GetApi().PostMessage(ctx.GetContext(), payload.Message.ChannelID, &dto.MessageToCreate{
-			Content: FormatNotMatchedCommandMessage(payload.Command, payload.Content),
-			MessageReference: &dto.MessageReference{
-				MessageID:             payload.Message.ID,
-				IgnoreGetMessageError: true,
-			},
-		})
-
+		msg := message.NewTextMessage().
+			Reference(payload.Message.ID).
+			Text(FormatNotMatchedCommandMessage(payload.Command, payload.Content))
+		ctx.GetApi().ReplyMessage(ctx, msg)
 	}
 }
 
 func HelpCommandReplyHandler() OptionalHandleFunction {
 	return func(ctx Context) {
 		payload := ctx.GetPayload()
-		command := message.ParseCommand(payload.Content)
+		command := txMessage.ParseCommand(payload.Content)
 		commandInfos := defaultMatcher.GetHelpInfo(command.Cmd, command.Content)
-		_, _ = ctx.GetApi().PostMessage(ctx.GetContext(), payload.Message.ChannelID, &dto.MessageToCreate{
-			Content: FormatCommandHelpArgumentMessage(command.Cmd, command.Content, commandInfos),
-			MessageReference: &dto.MessageReference{
-				MessageID:             payload.Message.ID,
-				IgnoreGetMessageError: true,
-			},
-		})
+		msg := message.NewTextMessage().
+			Reference(payload.Message.ID).
+			Text(FormatCommandHelpArgumentMessage(command.Cmd, command.Content, commandInfos))
+		ctx.GetApi().ReplyMessage(ctx, msg)
 	}
 }

@@ -1,7 +1,6 @@
 package plugin
 
 import (
-	"github.com/tencent-connect/botgo/dto"
 	"studio.sunist.work/sunist-c/ceobebot-qqchanel/processor"
 )
 
@@ -16,12 +15,6 @@ func RegisterPlugin(plugins ...MessagePlugin) {
 
 func ProcessMessageHandler(command TextReplyCommand) processor.OptionalHandleFunction {
 	return func(ctx processor.Context) {
-		_, _ = ctx.GetApi().PostMessage(ctx.GetContext(), ctx.GetPayload().Message.ChannelID, &dto.MessageToCreate{
-			Content: command.Handle(ctx.GetPayload()),
-			MessageReference: &dto.MessageReference{
-				MessageID:             ctx.GetPayload().Message.ID,
-				IgnoreGetMessageError: true,
-			},
-		})
+		ctx.GetApi().ReplyMessage(ctx, command.Handle(ctx.GetPayload()))
 	}
 }
