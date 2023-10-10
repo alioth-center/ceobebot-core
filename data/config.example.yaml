@@ -5,3 +5,9 @@ bot_config:
   timeout_second: 3 # 超时时间，单位：秒
   test_mode: true # 测试模式，使用沙盒环境
   undefined_reply: "help" # 没找到回复处理函数时发生什么： help(发送帮助信息) | not_matched(回复未找到) | ignore(忽略) | not_matched_if_no_help(没有帮助信息时回复未找到)
+
+infrastructure:
+  logger:
+    level: "debug"
+    formatter: "json"
+    log_path: "data/stdout.log"

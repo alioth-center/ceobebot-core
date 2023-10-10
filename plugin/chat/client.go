@@ -5,18 +5,23 @@ import (
 	"fmt"
 	"github.com/parnurzeal/gorequest"
 	"strings"
+	"studio.sunist.work/sunist-c/ceobebot-qqchanel/infrastructure/log"
 	"time"
 )
 
 var (
 	client = Client{}
+	logger = log.NewLogger(log.Config{
+		Level:     "info",
+		Formatter: "json",
+		FilePath:  "data/chat/history.log",
+	})
 )
 
 type Client struct{}
 
 func (c Client) ReplyConversation(text string) (reply string, footer string) {
 	model := "gpt-3.5-turbo"
-
 	payload := NewGptCompletionsRequest(
 		GptConfigOptions{
 			Model:            Gpt3Dot5Turbo,
@@ -61,7 +66,7 @@ func (c Client) ReplyConversation(text string) (reply string, footer string) {
 	fmt.Println("problem", text, "cost", response.Usage.TotalTokens, "tokens")
 
 	if len(response.Choices) == 0 {
-		return fmt.Sprintf("ERROR: 没有回复\n%+v", openAiResponse), fmt.Sprintf(
+		reply, footer = fmt.Sprintf("ERROR: 没有回复\n%+v", openAiResponse), fmt.Sprintf(
 			"在%s回复自%s模型\n问题token消耗：%d，回复token消耗：%d，总token消耗：%d\n扣费: %d CNY",
 			time.Now().In(time.Local).Format("2006年1月2日15:04"), model, 0, 0, 0, 0,
 		)
@@ -69,10 +74,13 @@ func (c Client) ReplyConversation(text string) (reply string, footer string) {
 		promptPrice, answerPrice := GetModelThousandTokenPrice(Gpt3Dot5Turbo)
 		promptCost := float64(response.Usage.PromptTokens) / float64(1000) * promptPrice
 		answerCost := float64(response.Usage.CompletionTokens) / float64(1000) * answerPrice
-		return response.Choices[0].Message.Content, fmt.Sprintf(
+		reply, footer = response.Choices[0].Message.Content, fmt.Sprintf(
 			"在%s回复自%s模型\n问题token消耗：%d，回复token消耗：%d，总token消耗：%d\n扣费: %.6f CNY",
 			timeString, model, response.Usage.PromptTokens, response.Usage.CompletionTokens, response.Usage.TotalTokens,
 			promptCost+answerCost,
 		)
 	}
+
+	logger.Info(log.NewFieldsWithMessage("complete conversation").With("question", text).With("answer", reply).With("options", footer))
+	return reply, footer
 }
