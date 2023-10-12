@@ -2,7 +2,7 @@ package sqlite
 
 import (
 	"fmt"
-	"gorm.io/driver/sqlite"
+	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
 	"os"
 	"path/filepath"
@@ -12,6 +12,8 @@ import (
 type Database interface {
 	init(dataSource string) error
 	migrate(models ...any) error
+	Has(table string, query string, args ...any) (exist bool, err error)
+	Count(table string, query string, args ...any) (count int64, err error)
 	GetOne(receiver any, query string, args ...any) error
 	GetAll(receiver any, query string, args ...any) error
 	PickOne(receiver any, query string, args ...any) error
@@ -62,6 +64,21 @@ func (s *sqliteDb) exec(command func(tx *gorm.DB) *gorm.DB) error {
 		log.Error(log.NewFieldsWithError(err).With("sql", sql).With("message", "sql execution failed"))
 	}
 	return err
+}
+
+func (s *sqliteDb) Has(table, query string, args ...any) (exist bool, err error) {
+	var count int64
+	err = s.exec(func(tx *gorm.DB) *gorm.DB {
+		return tx.Table(table).Where(query, args...).Limit(100).Count(&count)
+	})
+	return count > 0, err
+}
+
+func (s *sqliteDb) Count(table, query string, args ...any) (count int64, err error) {
+	err = s.exec(func(tx *gorm.DB) *gorm.DB {
+		return tx.Table(table).Where(query, args...).Count(&count)
+	})
+	return count, err
 }
 
 func (s *sqliteDb) GetOne(receiver any, query string, args ...any) error {
