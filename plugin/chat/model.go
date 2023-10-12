@@ -13,6 +13,18 @@ const (
 	Gpt4Poe              GptModel = "gpt-4-poe"
 )
 
+const (
+	GptApi   ApiType = "chat"
+	ImageApi ApiType = "image"
+	ShortUrl ApiType = "short"
+)
+
+const (
+	SizeLarge  ImageSize = "large"
+	SizeMedium ImageSize = "medium"
+	SizeSmall  ImageSize = "small"
+)
+
 var (
 	SupportedGptModels = map[string]GptModel{
 		"gpt-3.5-turbo":          Gpt3Dot5Turbo,
@@ -23,6 +35,12 @@ var (
 		"gpt-4-poe":              Gpt4Poe,
 		"gpt-4-0314":             Gpt40314,
 		"gpt-4-0613":             Gpt40613,
+	}
+
+	SupportedImageSizes = map[ImageSize]string{
+		SizeSmall:  "256x256",
+		SizeMedium: "512x512",
+		SizeLarge:  "1024x1024",
 	}
 )
 
@@ -175,4 +193,50 @@ type GptCompletionsResponse struct {
 
 func GetModelThousandTokenPrice(_ GptModel) (prompt float64, answer float64) {
 	return 0.03, 0.04
+}
+
+type ApiType string
+
+type ImageSize string
+
+func (size ImageSize) toRequestSize() string {
+	switch size {
+	case SizeSmall:
+		return "256x256"
+	case SizeMedium:
+		return "512x512"
+	case SizeLarge:
+		return "1024x1024"
+	default:
+		return "256x256"
+	}
+}
+
+type ImageGenerationRequest struct {
+	Prompt string `json:"prompt"`
+	Number int    `json:"n"`
+	Size   string `json:"size"`
+}
+
+type ImageGenerationResponse struct {
+	Created uint64                        `json:"created"`
+	Data    []ImageGenerationResponseData `json:"data"`
+}
+
+type ImageGenerationResponseData struct {
+	Url        string `json:"url"`
+	Base64Json any    `json:"b64_json"`
+}
+
+func GetImageGenerationPrice(size ImageSize) float64 {
+	switch size {
+	case SizeSmall:
+		return 0.16
+	case SizeMedium:
+		return 0.18
+	case SizeLarge:
+		return 0.2
+	default:
+		return 0.2
+	}
 }

@@ -2,6 +2,7 @@ package chat
 
 import (
 	"fmt"
+	"strings"
 	"studio.sunist.work/sunist-c/ceobebot-qqchanel/plugin"
 	"studio.sunist.work/sunist-c/ceobebot-qqchanel/processor"
 	"studio.sunist.work/sunist-c/ceobebot-qqchanel/processor/message"
@@ -21,16 +22,16 @@ func (g GptCommand) Description() string {
 }
 
 func (g GptCommand) Example() string {
-	return "/chat ${你的信息}"
+	return "/ai chat [对话内容]"
 }
 
 func (g GptCommand) Triggered(content string) (triggered bool) {
-	return content != ""
+	return strings.HasPrefix(content, "chat ")
 }
 
 func (g GptCommand) Handle(payload processor.Payload) (replyMessage message.Message) {
 	start := time.Now()
-	reply, additional := client.ReplyConversation(payload.Content)
+	reply, additional := client.ReplyConversation(strings.TrimPrefix(payload.Content, "chat "))
 	end := time.Since(start)
 	return message.NewTextMessage().
 		At(payload.Message.Author.ID).NewLine().
