@@ -1,0 +1,8 @@
+version: "3"
+
+services:
+  ceobebot:
+    build: .
+    container_name: ceobebot-qqchanel
+    volumes:
+      - ./data:/app/data # 数据文件夹
