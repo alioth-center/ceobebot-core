@@ -79,10 +79,6 @@ func (m *TextMessage) Build() *dto.MessageToCreate {
 	}
 }
 
-func NewTextMessage() *TextMessage {
-	return &TextMessage{
-		content:   strings.Builder{},
-		image:     "",
-		reference: nil,
-	}
+func (m *TextMessage) Type() Type {
+	return TextMessageType
 }
