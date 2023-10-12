@@ -22,7 +22,7 @@ func (f Fields) WithFields(fields Fields) Fields {
 
 func NewFields() Fields {
 	fields := map[string]interface{}{}
-	pc, file, line, ok := runtime.Caller(1)
+	pc, file, line, ok := runtime.Caller(2)
 	if !ok {
 		file = "unknown"
 		line = 0
