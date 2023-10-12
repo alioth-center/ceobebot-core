@@ -1,7 +1,7 @@
 package message
 
 import (
-	"studio.sunist.work/sunist-c/ceobebot-qqchanel/infrastructure/config"
+	"github.com/ceobebot/qqchannel/infrastructure/config"
 )
 
 type Emoji = string

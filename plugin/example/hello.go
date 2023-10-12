@@ -2,9 +2,9 @@ package example
 
 import (
 	"fmt"
-	"studio.sunist.work/sunist-c/ceobebot-qqchanel/plugin"
-	"studio.sunist.work/sunist-c/ceobebot-qqchanel/processor"
-	"studio.sunist.work/sunist-c/ceobebot-qqchanel/processor/message"
+	"github.com/ceobebot/qqchannel/plugin"
+	"github.com/ceobebot/qqchannel/processor"
+	"github.com/ceobebot/qqchannel/processor/message"
 )
 
 func init() {

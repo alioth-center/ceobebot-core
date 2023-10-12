@@ -5,6 +5,8 @@ import (
 	"crypto/md5"
 	"encoding/json"
 	"fmt"
+	"github.com/ceobebot/qqchannel/infrastructure/log"
+	"github.com/ceobebot/qqchannel/processor/message"
 	"github.com/sirupsen/logrus"
 	"github.com/tencent-connect/botgo/dto"
 	"github.com/tencent-connect/botgo/openapi"
@@ -13,8 +15,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"studio.sunist.work/sunist-c/ceobebot-qqchanel/infrastructure/log"
-	"studio.sunist.work/sunist-c/ceobebot-qqchanel/processor/message"
 )
 
 const (

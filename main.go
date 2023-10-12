@@ -1,8 +1,8 @@
 package main
 
 import (
-	_ "studio.sunist.work/sunist-c/ceobebot-qqchanel/plugin/imports"
-	"studio.sunist.work/sunist-c/ceobebot-qqchanel/processor"
+	_ "github.com/ceobebot/qqchannel/plugin/imports"
+	"github.com/ceobebot/qqchannel/processor"
 )
 
 func main() {

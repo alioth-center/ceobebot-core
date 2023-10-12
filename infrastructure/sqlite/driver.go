@@ -2,11 +2,11 @@ package sqlite
 
 import (
 	"fmt"
+	"github.com/ceobebot/qqchannel/infrastructure/log"
 	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
 	"os"
 	"path/filepath"
-	"studio.sunist.work/sunist-c/ceobebot-qqchanel/infrastructure/log"
 )
 
 type Database interface {

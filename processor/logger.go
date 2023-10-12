@@ -1,6 +1,6 @@
 package processor
 
-import "studio.sunist.work/sunist-c/ceobebot-qqchanel/infrastructure/log"
+import "github.com/ceobebot/qqchannel/infrastructure/log"
 
 var (
 	logger = log.NewLogger(log.Config{

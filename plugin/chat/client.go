@@ -3,9 +3,9 @@ package chat
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/ceobebot/qqchannel/infrastructure/log"
 	"github.com/parnurzeal/gorequest"
 	"strings"
-	"studio.sunist.work/sunist-c/ceobebot-qqchanel/infrastructure/log"
 	"time"
 )
 

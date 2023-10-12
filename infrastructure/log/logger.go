@@ -1,9 +1,9 @@
 package log
 
 import (
+	"github.com/ceobebot/qqchannel/infrastructure/config"
 	"github.com/sirupsen/logrus"
 	"os"
-	"studio.sunist.work/sunist-c/ceobebot-qqchanel/infrastructure/config"
 )
 
 var (

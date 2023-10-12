@@ -1,10 +1,10 @@
 package mihoyo
 
 import (
+	"github.com/ceobebot/qqchannel/plugin"
+	"github.com/ceobebot/qqchannel/processor"
+	"github.com/ceobebot/qqchannel/processor/message"
 	"strings"
-	"studio.sunist.work/sunist-c/ceobebot-qqchanel/plugin"
-	"studio.sunist.work/sunist-c/ceobebot-qqchanel/processor"
-	"studio.sunist.work/sunist-c/ceobebot-qqchanel/processor/message"
 )
 
 type StarRailCommand struct {

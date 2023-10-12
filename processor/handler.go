@@ -1,9 +1,9 @@
 package processor
 
 import (
+	"github.com/ceobebot/qqchannel/processor/message"
 	txMessage "github.com/tencent-connect/botgo/dto/message"
 	"strings"
-	"studio.sunist.work/sunist-c/ceobebot-qqchanel/processor/message"
 )
 
 func init() {

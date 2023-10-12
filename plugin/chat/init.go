@@ -1,9 +1,9 @@
 package chat
 
 import (
-	"studio.sunist.work/sunist-c/ceobebot-qqchanel/infrastructure/config"
-	"studio.sunist.work/sunist-c/ceobebot-qqchanel/infrastructure/sqlite"
-	"studio.sunist.work/sunist-c/ceobebot-qqchanel/plugin"
+	"github.com/ceobebot/qqchannel/infrastructure/config"
+	"github.com/ceobebot/qqchannel/infrastructure/sqlite"
+	"github.com/ceobebot/qqchannel/plugin"
 )
 
 var (

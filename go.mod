@@ -1,4 +1,4 @@
-module studio.sunist.work/sunist-c/ceobebot-qqchanel
+module github.com/ceobebot/qqchannel
 
 go 1.21
 
