@@ -1,7 +1,7 @@
 package zerobot
 
 import (
-	"studio.sunist.work/sunist-c/ceobebot-qqchanel/plugin"
+	"github.com/ceobebot/qqchannel/plugin"
 )
 
 func init() {

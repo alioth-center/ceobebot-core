@@ -27,9 +27,6 @@ func (m *ImageMessage) Build() *dto.MessageToCreate {
 	}
 }
 
-func NewImageMessage() *ImageMessage {
-	return &ImageMessage{
-		image:     "",
-		reference: nil,
-	}
+func (m *ImageMessage) Type() Type {
+	return ImageMessageType
 }

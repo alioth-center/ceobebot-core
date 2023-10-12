@@ -1,7 +1,7 @@
 package plugin
 
 import (
-	"studio.sunist.work/sunist-c/ceobebot-qqchanel/processor"
+	"github.com/ceobebot/qqchannel/processor"
 )
 
 func RegisterPlugin(plugins ...MessagePlugin) {

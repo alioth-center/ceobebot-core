@@ -3,3 +3,7 @@ config.yaml
 build/
 *.log
 *.db
+data/chat/cache/*.png
+
+.DS_Store
+go.sum

@@ -22,7 +22,7 @@ func (f Fields) WithFields(fields Fields) Fields {
 
 func NewFields() Fields {
 	fields := map[string]interface{}{}
-	pc, file, line, ok := runtime.Caller(1)
+	pc, file, line, ok := runtime.Caller(2)
 	if !ok {
 		file = "unknown"
 		line = 0
@@ -35,10 +35,10 @@ func NewFields() Fields {
 
 	if f := runtime.FuncForPC(pc); f == nil {
 		fields["func_name"] = "unknown"
-		fields["file_name"] = path.String()
+		fields["file_name"] = formatRelativePath(path.String())
 	} else {
-		fields["func_name"] = f.Name()
-		fields["file_name"] = path.String()
+		fields["func_name"] = formatCaller(f.Name())
+		fields["file_name"] = formatRelativePath(path.String())
 	}
 
 	return fields
@@ -54,4 +54,12 @@ func NewFieldsWithError(err error) Fields {
 	fields := NewFields()
 	fields["error"] = err
 	return fields
+}
+
+func formatRelativePath(path string) string {
+	return strings.TrimPrefix(path, workingDir)
+}
+
+func formatCaller(caller string) string {
+	return strings.TrimPrefix(caller, pkgName)
 }

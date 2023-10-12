@@ -2,12 +2,12 @@ package processor
 
 import (
 	"context"
+	"github.com/ceobebot/qqchannel/infrastructure/log"
 	"github.com/tencent-connect/botgo/dto"
 	"github.com/tencent-connect/botgo/dto/message"
 	"github.com/tencent-connect/botgo/event"
 	"github.com/tencent-connect/botgo/openapi"
 	"strings"
-	"studio.sunist.work/sunist-c/ceobebot-qqchanel/infrastructure/log"
 )
 
 func AtMessageEventHandler(api openapi.OpenAPI) event.ATMessageEventHandler {

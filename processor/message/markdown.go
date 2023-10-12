@@ -29,3 +29,7 @@ func (m *MarkdownMessage) Build() *dto.MessageToCreate {
 		MessageReference: m.reference,
 	}
 }
+
+func (m *MarkdownMessage) Type() Type {
+	return MarkdownMessageType
+}

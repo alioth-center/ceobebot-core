@@ -1,8 +1,8 @@
 package plugin
 
 import (
-	"studio.sunist.work/sunist-c/ceobebot-qqchanel/processor"
-	"studio.sunist.work/sunist-c/ceobebot-qqchanel/processor/message"
+	"github.com/ceobebot/qqchannel/processor"
+	"github.com/ceobebot/qqchannel/processor/message"
 )
 
 type MessageCommandType string

@@ -1,6 +1,6 @@
 package processor
 
-import "studio.sunist.work/sunist-c/ceobebot-qqchanel/infrastructure/config"
+import "github.com/ceobebot/qqchannel/infrastructure/config"
 
 var (
 	systemConfig = SystemConfig{}

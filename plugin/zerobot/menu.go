@@ -2,11 +2,11 @@ package zerobot
 
 import (
 	"fmt"
+	"github.com/ceobebot/qqchannel/infrastructure/config"
+	"github.com/ceobebot/qqchannel/plugin"
+	"github.com/ceobebot/qqchannel/processor"
+	"github.com/ceobebot/qqchannel/processor/message"
 	"math/rand"
-	"studio.sunist.work/sunist-c/ceobebot-qqchanel/infrastructure/config"
-	"studio.sunist.work/sunist-c/ceobebot-qqchanel/plugin"
-	"studio.sunist.work/sunist-c/ceobebot-qqchanel/processor"
-	"studio.sunist.work/sunist-c/ceobebot-qqchanel/processor/message"
 	"time"
 )
 
