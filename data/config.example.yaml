@@ -8,6 +8,11 @@ bot_config:
 
 infrastructure:
   logger:
-    level: "debug"
-    formatter: "json"
-    log_path: "data/stdout.log"
+    level: "debug" # 日志的等级，debug | info | warn | error
+    formatter: "json" # 日志的格式，json | text，目前仅支持json
+    log_path: "data/stdout.log" # 日志的输出路径，这个配置仅对标准日志器有效
+    relative_path: true # 是否开启相对路径，如开启则在日志的路径打印中使用相对路径
+    package_name: "studio.sunist.work/sunist-c/ceobebot-qqchanel" # 日志中的包名，仅在相对路径开启时有效
+  database:
+    driver: "sqlite3" # 数据库类型，sqlite3 | postgres | mysql，目前仅支持sqlite3
+    datasource: "data/database.db" # 数据库连接字符串，目前仅支持sqlite3

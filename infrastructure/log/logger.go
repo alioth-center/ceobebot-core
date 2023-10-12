@@ -7,14 +7,31 @@ import (
 )
 
 var (
-	logConfig Config
-	logger    *Logger
+	logConfig  Config
+	logger     *Logger
+	workingDir string
+	pkgName    string
 )
 
 func init() {
+
 	// 从配置文件中加载日志配置
 	if loadConfigErr := config.LoadCustomConfigWithKeys(&logConfig, "infrastructure", "logger"); loadConfigErr != nil {
 		panic(loadConfigErr)
+	}
+
+	// 获取工作目录
+	if logConfig.RelativePath {
+		// 仅在配置文件中指定了相对路径时才获取工作目录
+		var getWorkingDirErr error
+		if workingDir, getWorkingDirErr = os.Getwd(); getWorkingDirErr != nil {
+			panic(getWorkingDirErr)
+		}
+
+		// 获取包名
+		pkgName = logConfig.PackageName
+	} else {
+		workingDir, pkgName = "", ""
 	}
 
 	// 初始化日志记录器
