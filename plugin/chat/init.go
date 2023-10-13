@@ -38,8 +38,8 @@ func (p Plugin) TriggerKey() string {
 	return "/ai"
 }
 
-func (p Plugin) Commands() []plugin.Command {
-	return []plugin.Command{
+func (p Plugin) Commands() []plugin.MessageCommand {
+	return []plugin.MessageCommand{
 		GptCommand{},
 		DrawCommand{},
 	}

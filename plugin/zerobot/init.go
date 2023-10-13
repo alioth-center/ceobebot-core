@@ -14,8 +14,8 @@ func (p Plugin) TriggerKey() string {
 	return "/zero"
 }
 
-func (p Plugin) Commands() []plugin.Command {
-	return []plugin.Command{
+func (p Plugin) Commands() []plugin.MessageCommand {
+	return []plugin.MessageCommand{
 		MenuCommand{},
 	}
 }
