@@ -29,6 +29,14 @@ func init() {
 		loadMasters(masterConfig)
 	}
 
+	for _, perm := range chatConfig.DefaultPermission {
+		if p, exist := format(perm); !exist {
+			panic("invalid default permission: " + perm)
+		} else {
+			defaultPermission = defaultPermission.AddPermission(p)
+		}
+	}
+
 	plugin.RegisterPlugin(Plugin{})
 }
 

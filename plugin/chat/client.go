@@ -29,11 +29,16 @@ func getApiUrl(api ApiType) string {
 
 type Client struct{}
 
-func (c Client) ReplyConversation(text string) (reply string, footer string) {
-	model := "gpt-3.5-turbo"
+func (c Client) ReplyConversation(text string, modelOpt GptModel) (reply string, footer string) {
+	model, gptModel := "gpt-3.5-turbo", Gpt3Dot5Turbo
+	if modelOpt != Gpt3Dot5Turbo {
+		model = string(modelOpt)
+		gptModel = modelOpt
+	}
+
 	payload := NewGptCompletionsRequest(
 		GptConfigOptions{
-			Model:            Gpt3Dot5Turbo,
+			Model:            gptModel,
 			Temperature:      chatConfig.Temperature,
 			PresencePenalty:  chatConfig.PresencePenalty,
 			FrequencyPenalty: chatConfig.FrequencyPenalty,
@@ -70,22 +75,28 @@ func (c Client) ReplyConversation(text string) (reply string, footer string) {
 
 	timeUnix := time.Unix(response.Created, 0)
 	timeUnix = timeUnix.In(time.Local)
-	timeString := timeUnix.Format("2006年1月2日15:04")
 
 	if len(response.Choices) == 0 {
-		reply, footer = fmt.Sprintf("ERROR: 没有回复\n%+v", openAiResponse), fmt.Sprintf(
-			"在%s回复自%s模型\n问题token消耗：%d，回复token消耗：%d，总token消耗：%d\n扣费: %d CNY",
-			time.Now().In(time.Local).Format("2006年1月2日15:04"), model, 0, 0, 0, 0,
-		)
+		reply, footer = fmt.Sprintf("ERROR: 没有回复\n%+v", openAiResponse), ""
 	} else {
 		promptPrice, answerPrice := GetModelThousandTokenPrice(Gpt3Dot5Turbo)
 		promptCost := float64(response.Usage.PromptTokens) / float64(1000) * promptPrice
 		answerCost := float64(response.Usage.CompletionTokens) / float64(1000) * answerPrice
-		reply, footer = response.Choices[0].Message.Content, fmt.Sprintf(
-			"在%s回复自%s模型\n问题token消耗：%d，回复token消耗：%d，总token消耗：%d\n扣费: %.6f CNY",
-			timeString, model, response.Usage.PromptTokens, response.Usage.CompletionTokens, response.Usage.TotalTokens,
-			promptCost+answerCost,
-		)
+
+		if gptModel == Gpt3Dot5Turbo {
+			footer = fmt.Sprintf(
+				"回复自%s模型\ntoken消耗：%d，扣费: %.6f CNY",
+				model, response.Usage.TotalTokens,
+				promptCost+answerCost,
+			)
+		} else {
+			footer = fmt.Sprintf(
+				"回复自%s模型\ntoken消耗：%d，扣费: N/A(只支持GPT3.5计算费用)",
+				model, response.Usage.TotalTokens,
+			)
+		}
+
+		reply = response.Choices[0].Message.Content
 	}
 
 	logger.Info(log.NewFieldsWithMessage("complete conversation").With("question", text).With("answer", reply).With("options", footer))

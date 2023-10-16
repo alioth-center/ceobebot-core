@@ -6,10 +6,15 @@ chat:
   temperature: 0.5
   presence_penalty: 0.1
   frequency_penalty: 0.1
-  default_permission: "chat" # chat, chat+, image-small, image-medium, image-large, image-multi
+  default_permission:
+    # 默认可以使用的权限：chat, chat+, image-small, image-medium, image-large, image-multi
+    - "chat"
+    - "chat+"
+    - "image-small"
+    - "image-medium"
 
 master:
-  chanel:
+  channel:
     # ${修改为你的频道ID}:
     11451419:
       # - ${修改为你的用户ID}
