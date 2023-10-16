@@ -50,5 +50,6 @@ func (p Plugin) Commands() []plugin.MessageCommand {
 	return []plugin.MessageCommand{
 		GptCommand{},
 		DrawCommand{},
+		ManagementCommand{},
 	}
 }

@@ -17,11 +17,11 @@ func (m ManagementCommand) Name() string {
 }
 
 func (m ManagementCommand) Description() string {
-	return "管理Chat插件"
+	return "管理AI插件的权限"
 }
 
 func (m ManagementCommand) Example() string {
-	return "/chat mgnt [子命令]"
+	return "/ai mgnt [子命令]"
 }
 
 func (m ManagementCommand) Triggered(content string) (triggered bool) {
