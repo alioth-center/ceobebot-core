@@ -31,7 +31,25 @@ func (g GptCommand) Triggered(content string) (triggered bool) {
 
 func (g GptCommand) Handle(payload processor.Payload) (replyMessage message.Message) {
 	start := time.Now()
-	reply, additional := client.ReplyConversation(strings.TrimPrefix(payload.Content, "chat "))
+	commands := strings.Split(payload.Content, " ")
+
+	gptModel, hasModelOpt := Gpt3Dot5Turbo, false
+	if model, exist := SupportedGptModels[commands[1]]; exist {
+		gptModel = model
+		hasModelOpt = true
+	} else {
+		gptModel = Gpt3Dot5Turbo
+		hasModelOpt = false
+	}
+
+	question := ""
+	if hasModelOpt {
+		question = strings.Join(commands[2:], " ")
+	} else {
+		question = strings.Join(commands[1:], " ")
+	}
+
+	reply, additional := client.ReplyConversation(question, gptModel)
 	end := time.Since(start)
 	return message.NewTextMessage().
 		At(payload.Message.Author.ID).NewLine().

@@ -13,12 +13,20 @@ func init() {
 
 type HelloPlugin struct{}
 
+func (h HelloPlugin) Info() plugin.MessagePluginInfo {
+	return plugin.MessagePluginInfo{
+		Name:       "问候插件",
+		TriggerKey: "hello",
+		BlockChain: false,
+	}
+}
+
 func (h HelloPlugin) TriggerKey() string {
 	return "/hello"
 }
 
-func (h HelloPlugin) Commands() []plugin.Command {
-	return []plugin.Command{
+func (h HelloPlugin) Commands() []plugin.MessageCommand {
+	return []plugin.MessageCommand{
 		HelloCommand{},
 	}
 }

@@ -7,10 +7,11 @@ import (
 )
 
 type Payload struct {
-	Message *dto.WSATMessageData
-	Event   *dto.WSPayload
-	Command string
-	Content string
+	Message    *dto.WSATMessageData
+	Event      *dto.WSPayload
+	Command    string
+	Content    string
+	RawContent string
 }
 
 type Context interface {

@@ -12,12 +12,27 @@ const (
 	ImageReplyMessageCommandType MessageCommandType = "ImageReplyMessageCommandType"
 )
 
-type MessagePlugin interface {
-	TriggerKey() string
-	Commands() []Command
+// MessagePluginInfo 消息插件信息
+type MessagePluginInfo struct {
+	Name       string
+	TriggerKey string
+	BlockChain bool
 }
 
-type Command interface {
+// MessageCommandInfo 消息命令信息
+type MessageCommandInfo struct {
+	Name        string
+	Description string
+	Type        MessageCommandType
+	Example     []string
+}
+
+type MessagePlugin interface {
+	TriggerKey() string
+	Commands() []MessageCommand
+}
+
+type MessageCommand interface {
 	Name() string
 	Description() string
 	Example() string
@@ -26,6 +41,6 @@ type Command interface {
 	Handle(payload processor.Payload) (replyMessage message.Message)
 }
 
-type TextReplyCommand Command
+type TextReplyCommand MessageCommand
 
-type ImageReplyCommand Command
+type ImageReplyCommand MessageCommand

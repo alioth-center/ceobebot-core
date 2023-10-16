@@ -14,8 +14,8 @@ func (p Plugin) TriggerKey() string {
 	return "/mihoyo"
 }
 
-func (p Plugin) Commands() []plugin.Command {
-	return []plugin.Command{
+func (p Plugin) Commands() []plugin.MessageCommand {
+	return []plugin.MessageCommand{
 		GenshinCommand{},
 		StarRailCommand{},
 	}

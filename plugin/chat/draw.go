@@ -4,7 +4,6 @@ import (
 	"github.com/ceobebot/qqchannel/plugin"
 	"github.com/ceobebot/qqchannel/processor"
 	"github.com/ceobebot/qqchannel/processor/message"
-	"strconv"
 	"strings"
 )
 
@@ -50,11 +49,6 @@ func (d DrawCommand) Handle(payload processor.Payload) (replyMessage message.Mes
 		prompt = args[1]
 	}
 
-	userID, getUserErr := strconv.ParseUint(payload.Message.Author.ID, 10, 64)
-	if getUserErr != nil {
-		return message.NewTextMessage().Text("获取用户ID失败").Reference(payload.Message.ID)
-	}
-
 	var permission string
 	switch size {
 	case SizeSmall:
@@ -67,7 +61,7 @@ func (d DrawCommand) Handle(payload processor.Payload) (replyMessage message.Mes
 		return message.NewTextMessage().Text("未知的使用权限").Reference(payload.Message.ID)
 	}
 
-	if hasPermission, checkErr := checkPermission(userID, permission); checkErr != nil {
+	if hasPermission, checkErr := checkPermission(payload.Message.Author.ID, permission); checkErr != nil {
 		return message.NewTextMessage().Text("检查权限失败，请联系管理员查看：" + checkErr.Error()).Reference(payload.Message.ID)
 	} else if !hasPermission {
 		return message.NewTextMessage().Text("您没有使用中画画的权限").Reference(payload.Message.ID)

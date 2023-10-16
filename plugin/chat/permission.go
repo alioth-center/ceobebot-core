@@ -6,6 +6,8 @@ import (
 
 var (
 	masterMap = map[uint64]map[uint64]bool{}
+
+	defaultPermission PermissionData = 0
 )
 
 func loadMasters(config map[uint64][]uint64) {
@@ -18,7 +20,7 @@ func loadMasters(config map[uint64][]uint64) {
 }
 
 type Permission struct {
-	UserID      uint64 `gorm:"column:user_id;primaryKey"`
+	UserID      string `gorm:"column:user_id;primaryKey;type:varchar(20)"`
 	UserName    string `gorm:"column:user_name;type:varchar(255)"`
 	Permissions uint64 `gorm:"column:permissions;index"`
 }
@@ -94,14 +96,22 @@ func format(permission string) (p PermissionData, exist bool) {
 	return permissionNone, false
 }
 
-func addPermission(userID uint64, nickname string, permissions ...string) error {
+func addPermission(userID string, nickname string, permissions ...string) error {
+	var fp = defaultPermission
+	for _, ps := range permissions {
+		if rp, exist := format(ps); exist {
+			fp = fp.AddPermission(rp)
+		} else {
+			return fmt.Errorf("permission %s not exist", ps)
+		}
+	}
+
 	var p Permission
 	has, tryGetErr := database.Has(Permission{}.TableName(), "user_id = ?", userID)
 
 	if tryGetErr != nil {
 		return fmt.Errorf("cannot get permission: %w", tryGetErr)
 	} else if !has {
-		defaultPermission, _ := format(chatConfig.DefaultPermission)
 		p = Permission{
 			UserID:      userID,
 			UserName:    nickname,
@@ -111,12 +121,7 @@ func addPermission(userID uint64, nickname string, permissions ...string) error 
 		return fmt.Errorf("cannot get permission: %w", getErr)
 	}
 
-	op := PermissionData(p.Permissions)
-	for _, ps := range permissions {
-		if rp, exist := format(ps); exist {
-			op = op.AddPermission(rp)
-		}
-	}
+	op := PermissionData(p.Permissions).AddPermission(fp)
 
 	if has {
 		return database.UpdateOne(&Permission{
@@ -131,12 +136,12 @@ func addPermission(userID uint64, nickname string, permissions ...string) error 
 	}
 }
 
-func removePermission(userID uint64, permissions ...string) error {
+func removePermission(userID string, permissions ...string) error {
 	var p Permission
 	if has, tryGetErr := database.Has(Permission{}.TableName(), "user_id = ?", userID); tryGetErr != nil {
 		return fmt.Errorf("cannot get permission: %w", tryGetErr)
 	} else if !has {
-		return nil
+		return fmt.Errorf("user %s not exist", userID)
 	} else if getErr := database.GetOne(&p, "user_id = ?", userID); getErr != nil {
 		return fmt.Errorf("cannot get permission: %w", getErr)
 	}
@@ -153,20 +158,36 @@ func removePermission(userID uint64, permissions ...string) error {
 	}, "user_id = ?", userID)
 }
 
-func checkPermission(userID uint64, permission string) (legal bool, err error) {
+func checkPermission(userID string, permission string) (legal bool, err error) {
 	var p Permission
 	needCheck, exist := format(permission)
 	if !exist {
 		return false, fmt.Errorf("permission %s not exist", permission)
 	}
+
+	if defaultPermission.HasPermission(needCheck) {
+		return true, nil
+	}
+
 	if has, tryGetErr := database.Has(Permission{}.TableName(), "user_id = ?", userID); tryGetErr != nil {
 		return false, fmt.Errorf("cannot get permission: %w", tryGetErr)
 	} else if !has {
-		defaultPermission, _ := format(chatConfig.DefaultPermission)
-		return defaultPermission.HasPermission(needCheck), nil
+		return false, nil
 	} else if getErr := database.GetOne(&p, "user_id = ?", userID); getErr != nil {
 		return false, fmt.Errorf("cannot get permission: %w", getErr)
 	} else {
 		return PermissionData(p.Permissions).HasPermission(needCheck), nil
+	}
+}
+
+func getPermission(userID string) (permission Permission, err error) {
+	if has, tryGetErr := database.Has(Permission{}.TableName(), "user_id = ?", userID); tryGetErr != nil {
+		return Permission{}, fmt.Errorf("cannot get permission: %w", tryGetErr)
+	} else if !has {
+		return Permission{}, nil
+	} else if getErr := database.GetOne(&permission, "user_id = ?", userID); getErr != nil {
+		return Permission{}, fmt.Errorf("cannot get permission: %w", getErr)
+	} else {
+		return permission, nil
 	}
 }

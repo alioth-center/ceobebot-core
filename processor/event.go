@@ -18,10 +18,11 @@ func AtMessageEventHandler(api openapi.OpenAPI) event.ATMessageEventHandler {
 		mustHandlers, optionalHandlers := DefaultMatcher().MatchHandlers(cmd.Cmd, cmd.Content)
 
 		ctx := NewContext(context.Background(), api, Payload{
-			Message: data,
-			Event:   event,
-			Command: cmd.Cmd,
-			Content: cmd.Content,
+			Message:    data,
+			Event:      event,
+			Command:    cmd.Cmd,
+			Content:    cmd.Content,
+			RawContent: data.Content,
 		}, mustHandlers, optionalHandlers)
 
 		ctx.Next()
