@@ -1,0 +1,17 @@
+# 数据文件夹
+data/
+
+# idea配置默认文件夹
+.idea/
+
+# 日志文件夹
+logs/
+
+# macos系统文件
+.DS_Store
+
+# vscode配置文件
+.vscode
+
+# 项目配置文件
+config/*.yaml
