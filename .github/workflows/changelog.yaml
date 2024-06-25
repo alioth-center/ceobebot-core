@@ -37,7 +37,7 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git checkout main  # 切换到 main 分支
-          git add CHANGELOG.md
+          git add changelog.md
           git commit -m "chore: update changelog"
           git push origin main  # 推送到 main 分支
         env:

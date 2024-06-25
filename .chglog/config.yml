@@ -2,7 +2,7 @@ style: github
 template: changelog.template
 info:
   title: changelog
-  repository_url: https://github.com/alioth-center/infrastructure
+  repository_url: https://github.com/alioth-center/ceobebot-core
 options:
   tag_filter_pattern: '^v'
   sort: "date"
