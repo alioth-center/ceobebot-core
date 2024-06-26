@@ -44,6 +44,7 @@ func InitializeZeroBot(ctx context.Context, coreConfig *core.Config, pluginConfi
 		}
 
 		pluginBuffer.Init()
+		pluginBuffer.InitCtx(ctx)
 		core.Logger().Debug(logger.NewFields(ctx).WithMessage("plugin initialized").WithData(map[string]any{"plugin": item.Name}))
 	}
 

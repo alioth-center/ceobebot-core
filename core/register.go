@@ -1,6 +1,7 @@
 package core
 
 import (
+	"context"
 	"reflect"
 
 	"github.com/alioth-center/infrastructure/utils/concurrency"
@@ -124,6 +125,13 @@ func WithInit(init func()) PluginOpts {
 	}
 }
 
+// WithInitCtx set plugin init function with context, will be called when plugin loaded
+func WithInitCtx(init func(context.Context)) PluginOpts {
+	return func(opt *PluginOptions) {
+		opt.initCtx = init
+	}
+}
+
 // WithPriority set plugin priority, it will replace priority in config file
 func WithPriority(priority int) PluginOpts {
 	return func(opt *PluginOptions) {
@@ -135,6 +143,7 @@ type PluginOptions struct {
 	config   any
 	priority int
 	init     func()
+	initCtx  func(ctx context.Context)
 }
 
 func (opts PluginOptions) Config() any {
@@ -148,5 +157,11 @@ func (opts PluginOptions) Priority() int {
 func (opts PluginOptions) Init() {
 	if opts.init != nil {
 		opts.init()
+	}
+}
+
+func (opts PluginOptions) InitCtx(ctx context.Context) {
+	if opts.initCtx != nil {
+		opts.initCtx(ctx)
 	}
 }

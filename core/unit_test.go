@@ -1,6 +1,8 @@
 package core
 
 import (
+	"context"
+	"github.com/alioth-center/infrastructure/trace"
 	"os"
 	"path/filepath"
 	"testing"
@@ -281,9 +283,16 @@ func TestRegister(t *testing.T) {
 	})
 
 	t.Run("ProcessPluginOpts", func(t *testing.T) {
-		x := 0
+		x, y := 0, 0
 		nilInit := func() {
 			x = 1
+		}
+		nilInitCtx := func(ctx context.Context) {
+			if trace.GetTid(ctx) == "" {
+				t.Errorf("Expected context to be set, but it was not")
+			} else {
+				y = 1
+			}
 		}
 		opts := &PluginOptions{}
 		WithConfig(1)(opts)
@@ -297,8 +306,10 @@ func TestRegister(t *testing.T) {
 		}
 
 		WithInit(nilInit)(opts)
+		WithInitCtx(nilInitCtx)(opts)
 		opts.Init()
-		if x != 1 {
+		opts.InitCtx(trace.NewContext())
+		if x != 1 || y != 1 {
 			t.Errorf("Expected init function to be set, but it was not")
 		}
 	})
